@@ -1,0 +1,11 @@
+<launch>
+
+    <!--Launch the camera node-->
+    <include file = "$(find realsense2_camera)/launch/rs_camera.launch">
+        <arg name = "initial_reset" value = "true" />
+    </include>
+
+    <!--Streaming node-->
+
+    
+</launch>
