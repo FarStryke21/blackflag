@@ -1,9 +1,8 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 import cv2
 from sensor_msgs.msg import Image
-from sensor_msgs.msg import String
 from cv_bridge import CvBridge
 
 def callback(image_msg):

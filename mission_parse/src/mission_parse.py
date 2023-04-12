@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from std_msgs.msg import String
@@ -16,7 +16,7 @@ def code_publish(plan):
 
 def parse_mission(filename):
     # Store mission files in the directory below
-    filedirectory = '/home/mechatronics/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
+    filedirectory = '/home/aman/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
     
     filepath = os.path.join(filedirectory,filename)
     mission = open(filepath, 'r+')

@@ -1,0 +1,5 @@
+<launch>
+    <include file="$(find base_locomotion)/launch/arduino_launch.launch" />
+
+    <node pkg="base_locomotion" type="keyboard_control.py" name="keyboard_input" respawn="true" />
+</launch>
