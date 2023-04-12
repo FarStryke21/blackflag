@@ -5,10 +5,12 @@
 #include <Arduino.h>
 #include <ros.h>
 #include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 
 ros::NodeHandle  nh;
 
 bool flag = 0;
+bool next = 0;
 char code[] = "00000000";
 
 void messageCb( const std_msgs::String& toggle_msg){
@@ -21,22 +23,33 @@ void messageCb( const std_msgs::String& toggle_msg){
   }
 }
 
-ros::Subscriber<std_msgs::String> sub("mission_code", &messageCb );
-std_msgs::String str_msg;
-ros::Publisher pub("data", &str_msg);
+void complete( const std_msgs::Bool& toggle_msg){
+  next = 1;
+}
+
+ros::Subscriber<std_msgs::Bool> sub1("/completition_status", &complete );
+
+ros::Subscriber<std_msgs::String> sub2("/mission_code", &messageCb );
+
+
+std_msgs::Bool reached;
+ros::Publisher pub("data", &reached);
+
+
 void setup()
 { 
   Serial.begin(57600);
   pinMode(13, OUTPUT);
   nh.initNode();
-  nh.subscribe(sub);
+  nh.subscribe(sub1);
+  nh.subscribe(sub2);
   nh.advertise(pub);
 }
 
 void loop()
 {  
-  str_msg.data = code;
-  pub.publish(&str_msg);
+  reached.data = code;
+  pub.publish(&reached);
   delay(1000);
   nh.spinOnce();
 }
