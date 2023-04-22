@@ -6,8 +6,7 @@
 // Yellow: encoder A
 // White: encoder B
 #include <ros.h>
-#include <std_msgs/Float32.h>
-#include <std_msgs/Int32.h>
+#include <geometry_msgs/Twist.h>
 
 // Encoder Pins for Front Right
 #define Encoder_output_FR_A 20 // pin2 of the Arduino
@@ -26,9 +25,6 @@
 #define Encoder_output_RL_B 7 // pin 3 of the Arduino
 
 ros::NodeHandle nh;
-std_msgs::Int32 count_msg;
-ros::Publisher pub_count("count", &count_msg);
-
 float linear_velocity = 0.0;
 int menuChoice = 0;
 
@@ -59,14 +55,30 @@ int inRL_2 = 6;
 float x = 0.0;
 float z = 0.0;
 
-int speed = 50;
 
-void cmdVelCallback(const std_msgs::Float32& cmd_input) {
-  menuChoice = int(cmd_input.data);
-  Serial.println(menuChoice);
+void cmdVelCallback(const geometry_msgs::Twist& twist_msg) {
+  x = twist_msg.linear.x;
+  z = twist_msg.angular.z;
+
+  if(x == 2.0)
+  {
+    menuChoice = 2;
+  }
+  else if (x == -2.0)
+  {
+    menuChoice = 1;
+  }
+  else if (z == 2.0)
+  {
+    menuChoice = 4;
+  }
+  else if (z == -2.0)
+  {
+    menuChoice = 3;
+  }
 }
 
-ros::Subscriber<std_msgs::Float32> sub("/cmd_input", cmdVelCallback);
+ros::Subscriber<geometry_msgs::Twist> sub("/turtle1/cmd_vel", cmdVelCallback);
 
 void setup() 
 {
@@ -115,7 +127,6 @@ void setup()
 
   nh.initNode();
   nh.subscribe(sub);
-  nh.advertise(pub_count);
 }
 
 void loop()
@@ -129,75 +140,69 @@ void loop()
   
   switch (menuChoice) 
   {
-    case 2:
-        count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+    case 1:
         while (Serial.available() == 0)
         {
 //          Reverse
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, HIGH);
           digitalWrite(inFR_2, LOW);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, HIGH);
           digitalWrite(inFL_2, LOW);
 
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,HIGH);
           digitalWrite(inRR_2,LOW);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,HIGH);
           digitalWrite(inRL_2,LOW);
 
           //Serial.println(Count_pulses);
         }
 
-    case 8:
-        count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+    case 2:
         while (Serial.available() == 0)
         {
 //          Front
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, LOW);
           digitalWrite(inFR_2, HIGH);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, LOW);
           digitalWrite(inFL_2, HIGH);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,LOW);
           digitalWrite(inRR_2,HIGH);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,LOW);
           digitalWrite(inRL_2,HIGH);
           
           //Serial.println(Count_pulses); 
         }
 
-    case 6:
-    count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+    case 3:
     while (Serial.available() == 0)
     {
 //      Right    
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, HIGH);
           digitalWrite(inFR_2, LOW);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, LOW);
           digitalWrite(inFL_2, HIGH);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,LOW);
           digitalWrite(inRR_2,HIGH);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,HIGH);
           digitalWrite(inRL_2,LOW);
           
@@ -205,36 +210,32 @@ void loop()
     
     }
     case 4:
-    count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
       while (Serial.available() == 0)
     {
 //      Left    
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, LOW);
           digitalWrite(inFR_2, HIGH);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, HIGH);
           digitalWrite(inFL_2, LOW);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,HIGH);
           digitalWrite(inRR_2,LOW);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,LOW);
           digitalWrite(inRL_2,HIGH);
           
           //Serial.println(Count_pulses); 
   }
-    case 3:
-    count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+    case 5:
       while (Serial.available() == 0)
     {
 //      Rear right    
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, HIGH);
           digitalWrite(inFR_2, LOW);
           
@@ -242,27 +243,25 @@ void loop()
           
           analogWrite(enRR,0);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,HIGH);
           digitalWrite(inRL_2,LOW);
           
           //Serial.println(Count_pulses); 
   } 
 
-    case 1:
-    count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+    case 6:
       while (Serial.available() == 0)
     {
 //      Rear left 
 
           analogWrite(enFR,0);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, HIGH);
           digitalWrite(inFL_2, LOW);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,HIGH);
           digitalWrite(inRR_2,LOW);
           
@@ -270,20 +269,18 @@ void loop()
          // Serial.println(Count_pulses); 
   }    
 
-      case 9:
-      count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+      case 7:
       while (Serial.available() == 0)
     {
 //      Front right 
 
           analogWrite(enFR,0);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, LOW);
           digitalWrite(inFL_2, HIGH);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,LOW);
           digitalWrite(inRR_2,HIGH);
           
@@ -291,13 +288,11 @@ void loop()
           //Serial.println(Count_pulses); 
   }  
 
-      case 7:
-      count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+      case 8:
       while (Serial.available() == 0)
     {
 //      Front left 
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, LOW);
           digitalWrite(inFR_2, HIGH);
           
@@ -305,54 +300,52 @@ void loop()
           
           analogWrite(enRR,0);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,LOW);
           digitalWrite(inRL_2,HIGH);
           
           //Serial.println(Count_pulses); 
  
   }
-      case 10:
-      count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
+      case 9:
       while (Serial.available() == 0)
     {
 //      clokwise    
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, HIGH);
           digitalWrite(inFR_2, LOW);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, LOW);
           digitalWrite(inFL_2, HIGH);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,HIGH);
           digitalWrite(inRR_2,LOW);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,LOW);
           digitalWrite(inRL_2,HIGH);
           
           //Serial.println(Count_pulses); 
   }
-      case 11:
+      case 10:
       while (Serial.available() == 0)
     {
 //      counterclockwise    
-          analogWrite(enFR, speed);
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, LOW);
           digitalWrite(inFR_2, HIGH);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, HIGH);
           digitalWrite(inFL_2, LOW);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,LOW);
           digitalWrite(inRR_2,HIGH);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,HIGH);
           digitalWrite(inRL_2,LOW);
           
@@ -360,53 +353,27 @@ void loop()
   }  
   
   case 0:
-  count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
       while (Serial.available() == 0)
     {
-//      stop   
-          analogWrite(enFR, speed);
+//      CLockwise    
+          analogWrite(enFR, 255);
           digitalWrite(inFR_1, LOW);
           digitalWrite(inFR_2, LOW);
           
-          analogWrite(enFL, speed);
+          analogWrite(enFL, 255);
           digitalWrite(inFL_1, LOW);
           digitalWrite(inFL_2, LOW);
           
-          analogWrite(enRR,speed);
+          analogWrite(enRR,255);
           digitalWrite(inRR_1,LOW);
           digitalWrite(inRR_2,LOW);
           
-          analogWrite(enRL,speed);
+          analogWrite(enRL,255);
           digitalWrite(inRL_1,LOW);
           digitalWrite(inRL_2,LOW);
           
           //Serial.println(Count_pulses); 
   }  
-  case 5:
-  count_msg.data = menuChoice;
-        pub_count.publish(&count_msg);
-      while (Serial.available() == 0)
-    {
-//      stop   
-          analogWrite(enFR, speed);
-          digitalWrite(inFR_1, LOW);
-          digitalWrite(inFR_2, LOW);
-          
-          analogWrite(enFL, speed);
-          digitalWrite(inFL_1, LOW);
-          digitalWrite(inFL_2, LOW);
-          
-          analogWrite(enRR,speed);
-          digitalWrite(inRR_1,LOW);
-          digitalWrite(inRR_2,LOW);
-          
-          analogWrite(enRL,speed);
-          digitalWrite(inRL_1,LOW);
-          digitalWrite(inRL_2,LOW);
-          
-          //Serial.println(Count_pulses); 
-  } 
    
 }
   nh.spinOnce();
