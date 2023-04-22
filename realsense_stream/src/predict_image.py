@@ -3,7 +3,7 @@
 import rospy
 import cv2
 from sensor_msgs.msg import Image
-from std_msgs.msg import String
+from std_msgs.msg import String, Int32
 from cv_bridge import CvBridge
 import os
 import torch
@@ -23,10 +23,12 @@ def callback(image_msg):
 def processing(frame, outputs):
     return_frame = frame
     labels = []
+    xs = []
     try :
         for output in outputs:
             x = output['x']
             y = output['y']
+            xs.append(x)
             w = output['width']
             h = output['height']
             return_frame = cv2.rectangle(return_frame, (int(x - w/2), int(y - h/2)), (int(x + w/2), int(y + h/2)), (0,0,255), 2)
@@ -36,14 +38,17 @@ def processing(frame, outputs):
     except Exception:
         pass
 
-    return return_frame, labels
+    return return_frame, labels, xs
 
 def prediction(image):
     # frame = np.asanyarray(image)
     outputs = clf.predict(image, confidence = 40, overlap = 50)
-    annotated_frame, labels = processing(image, outputs.json()['predictions'])
+    annotated_frame, label, x = processing(image, outputs.json()['predictions'])
+    height, width = annotated_frame.shape[:2]
     try:
-         pub.publish(labels[0])
+        pub_label.publish(label[0])
+        pub_align.publish(640 - int(x[0]))
+        # pub_align.publish(width)
     except Exception as e:
         pass
     cv2.imshow('Realsense Stream', annotated_frame)
@@ -62,5 +67,6 @@ if __name__ == '__main__':
 
     rospy.init_node('image_predict', anonymous=True)
     rospy.Subscriber('/camera/color/image_raw', Image, callback)
-    pub = rospy.Publisher('/realsense_predict', String, queue_size = 10)
+    pub_label = rospy.Publisher('/realsense_predict', String, queue_size = 10)
+    pub_align = rospy.Publisher('/align_factor', Int32, queue_size = 10)
     rospy.spin()

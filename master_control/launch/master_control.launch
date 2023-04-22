@@ -5,7 +5,16 @@
         <arg name = "initial_reset" value = "true" />
     </include>
 
-    <!--Streaming node-->
+    <!--Endoscope Stream-->
+    <node pkg="endoscope_control" type="endoscope_publish.py" name="endoscope_publish" respawn="true" />
 
+    <!--Arduino node-->
+    <include file="$(find base_locomotion)/launch/arduino_launch.launch" />
+
+    <!--mission parser initiate-->
+    <node pkg="mission_parse" type="mission_parse.py" name="mission_parse" respawn="true" />
+
+    <!--Arm Communication-->
+    
     
 </launch>

@@ -59,7 +59,7 @@ int inRL_2 = 6;
 float x = 0.0;
 float z = 0.0;
 
-int speed = 50;
+int speed = 150;
 
 void cmdVelCallback(const std_msgs::Float32& cmd_input) {
   menuChoice = int(cmd_input.data);

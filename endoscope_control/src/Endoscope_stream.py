@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 
 # Open the default camera
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 
 # Set the resolution of the camera
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)

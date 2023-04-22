@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 from sensor_msgs.msg import Image
@@ -15,13 +15,13 @@ def camera_publisher():
 
     bridge = CvBridge()
 
-    # Open the default camera
-    cap = cv2.VideoCapture(0)
+    # Open the default camera (TUNE THIS FOR NANO PORTS)
+    cap = cv2.VideoCapture(2)
 
     # Set the resolution of the camera
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
-
+    
     while not rospy.is_shutdown():
         # Read a frame from the camera
         ret, frame = cap.read()

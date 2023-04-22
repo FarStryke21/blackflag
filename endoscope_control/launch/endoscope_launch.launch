@@ -1,0 +1,4 @@
+<launch>
+    <!--Endoscope Stream-->
+    <node pkg="endoscope_control" type="endoscope_publish.py" name="endoscope_publish" respawn="true" />
+</launch>

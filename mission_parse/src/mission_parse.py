@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 import os
 
-def code_publish(plan):
-    pub = rospy.Publisher('mission_code', String, queue_size=10)
-    rospy.init_node('mission_parse', anonymous=True)
-    rate = rospy.Rate(10)
 
-    rospy.loginfo('Publishing started!')
+def code_publish(plan):
+    rospy.loginfo('Encoded Code Publishing started!')
     while not rospy.is_shutdown():
-        pub.publish(plan)
+        code_pub.publish(plan)
         rate.sleep()
 
 def parse_mission(filename):
@@ -60,14 +57,33 @@ def encode(plan):
                 
     return encoded_plan
 
+def callback(data):
+    global loc
+    task = parsed_command[loc]
+    message = str(task[1])+":"+str(task[2])
+    if loc < len(parsed_command)-1:
+        loc = loc+1
+        rospy.loginfo(f'Publishing data for {loc}th element in mission file')
+        data_pub.publish(message)
+    else:
+        rospy.loginfo('End of File reached!')
+
 if __name__ == '__main__':
     # filename = input('Enter File name : ')
     filename = 'hard.txt'
     parsed_command, time = parse_mission(filename)
     encoded_plan = encode(parsed_command)
-
+    loc = 0
     try:
+        code_pub = rospy.Publisher('mission_code', String, queue_size=10)
+        data_pub = rospy.Publisher('panel_info', String, queue_size=10)
+        rospy.Subscriber("completion_status", Bool, callback)
+        rospy.init_node('mission_parse', anonymous=True)
+
+        callback(True)
+        rate = rospy.Rate(10)
         code_publish(encoded_plan)
+
     except rospy.ROSInterruptException:
         pass
 
