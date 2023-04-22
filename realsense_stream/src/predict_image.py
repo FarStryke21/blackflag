@@ -3,7 +3,11 @@
 import rospy
 import cv2
 from sensor_msgs.msg import Image
+<<<<<<< HEAD
 from std_msgs.msg import String, Int32
+=======
+from std_msgs.msg import String
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
 from cv_bridge import CvBridge
 import os
 import torch
@@ -23,12 +27,18 @@ def callback(image_msg):
 def processing(frame, outputs):
     return_frame = frame
     labels = []
+<<<<<<< HEAD
     xs = []
+=======
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
     try :
         for output in outputs:
             x = output['x']
             y = output['y']
+<<<<<<< HEAD
             xs.append(x)
+=======
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
             w = output['width']
             h = output['height']
             return_frame = cv2.rectangle(return_frame, (int(x - w/2), int(y - h/2)), (int(x + w/2), int(y + h/2)), (0,0,255), 2)
@@ -38,17 +48,27 @@ def processing(frame, outputs):
     except Exception:
         pass
 
+<<<<<<< HEAD
     return return_frame, labels, xs
+=======
+    return return_frame, labels
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
 
 def prediction(image):
     # frame = np.asanyarray(image)
     outputs = clf.predict(image, confidence = 40, overlap = 50)
+<<<<<<< HEAD
     annotated_frame, label, x = processing(image, outputs.json()['predictions'])
     height, width = annotated_frame.shape[:2]
     try:
         pub_label.publish(label[0])
         pub_align.publish(640 - int(x[0]))
         # pub_align.publish(width)
+=======
+    annotated_frame, labels = processing(image, outputs.json()['predictions'])
+    try:
+         pub.publish(labels[0])
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
     except Exception as e:
         pass
     cv2.imshow('Realsense Stream', annotated_frame)
@@ -67,6 +87,10 @@ if __name__ == '__main__':
 
     rospy.init_node('image_predict', anonymous=True)
     rospy.Subscriber('/camera/color/image_raw', Image, callback)
+<<<<<<< HEAD
     pub_label = rospy.Publisher('/realsense_predict', String, queue_size = 10)
     pub_align = rospy.Publisher('/align_factor', Int32, queue_size = 10)
+=======
+    pub = rospy.Publisher('/realsense_predict', String, queue_size = 10)
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
     rospy.spin()

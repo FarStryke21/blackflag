@@ -1,6 +1,10 @@
 <launch>
     <node name="serial_node"        pkg="rosserial_python"      type="serial_node.py">
     <param name="port"              type="string"               value="/dev/ttyACM0"/>
+<<<<<<< HEAD
     <param name="baud"              type="int"                  value="57600"/>
+=======
+    <param name="baud"              type="int"                  value="9600"/>
+>>>>>>> 4f5f9ed3e7934c127a749719ca23aff68ab53dd0
     </node>
 </launch>
