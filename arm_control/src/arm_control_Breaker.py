@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def breaker(group,base=0.0, hold=True):
+def breaker(group, mission_info, base=0.0):
   import hebi
   import numpy as np
   from time import sleep
@@ -20,6 +20,9 @@ def breaker(group,base=0.0, hold=True):
   # Set positions
   fbk = group_feedback
   group_feedback = group.get_next_feedback(reuse_fbk=group_feedback)
+
+  # Set command timeout:
+  group.command_lifetime = 200.00
 
   if (base==0.0):
     pos[:,0] = group_feedback.position

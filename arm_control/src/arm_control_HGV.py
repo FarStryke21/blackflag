@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-def HGV(group,base):
+def HGV(group,base, mission_info):
 
   import hebi
   import numpy as np
@@ -9,6 +9,11 @@ def HGV(group,base):
   import math
 
   # Populate variable 'current_position' with position feedback
+
+  lookup = hebi.Lookup()
+    # Give the Lookup process 2 seconds to discover modules
+
+  group = lookup.get_group_from_family('Arm')
 
   # Position, velocity, and acceleration waypoints.
   # Each column is a separate waypoint.
@@ -24,9 +29,15 @@ def HGV(group,base):
   # Set all other values to NaN
   vel[:,1:-1] = acc[:,1:-1] = np.nan
 
+  group_feedback = hebi.GroupFeedback(group.size)
+  group.feedback_frequency = 200.0
   # Set positions
   fbk = group_feedback
   group_feedback = group.get_next_feedback(reuse_fbk=group_feedback)
+
+  # Set command timeout:
+  group.command_lifetime = 200.00
+  
   pos[:,0] = group_feedback.position
   pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
   pos[:,2] = [base, -4.34, 2.35, 4.09, 0.0]
@@ -42,16 +53,28 @@ def HGV(group,base):
   pos[:,11] = [-0.03, -3.29, 2.83, 4.09, 0.0] #Home2
 
   #pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
-
-
-
-  # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 60, 12)
+# The times to reach each waypoint (in seconds)
+  time = np.linspace(0, 40, 11)
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)
 
-  return trajectory
+
+  cmd = hebi.GroupCommand(num_joints)
+  period = 0.01
+  duration = trajectory.duration
+
+  pos_cmd = np.array(num_joints, dtype=np.float64)
+  vel_cmd = np.array(num_joints, dtype=np.float64)
+
+  t = 0.0
+  while (t < duration):
+    pos_cmd, vel_cmd, acc_cmd = trajectory.get_state(t)
+    cmd.position = pos_cmd
+    cmd.velocity = vel_cmd
+    group.send_command(cmd)
+    t = t + period
+    sleep(period)
 
 
     

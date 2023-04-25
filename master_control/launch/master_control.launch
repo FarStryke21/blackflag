@@ -1,13 +1,13 @@
 <launch>
 
+    <!--Predict Image-->
+    <node pkg="realsense_stream" type="predict_image.py" name="image_predict" respawn="true" />
+    
     <!--Launch the camera node-->
     <include file = "$(find realsense2_camera)/launch/rs_camera.launch">
         <arg name = "initial_reset" value = "true" />
     </include>
-
-    <!--Endoscope Stream-->
-    <node pkg="endoscope_control" type="endoscope_publish.py" name="endoscope_publish" respawn="true" />
-
+    
     <!--Arduino node-->
     <include file="$(find base_locomotion)/launch/arduino_launch.launch" />
 
@@ -15,6 +15,8 @@
     <node pkg="mission_parse" type="mission_parse.py" name="mission_parse" respawn="true" />
 
     <!--Arm Communication-->
-    
-    
+    <node pkg="arm_control" type="arm_master.py" name="arm_node" required = "true" />
+
+
+
 </launch>

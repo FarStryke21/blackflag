@@ -13,9 +13,9 @@ def vision(group,base):
   # Each column is a separate waypoint.
   # Each row is a different joint.
   num_joints=5
-  pos = np.empty((num_joints, 3))
-  vel = np.empty((num_joints, 3))
-  acc = np.empty((num_joints, 3))
+  pos = np.empty((num_joints, 7))
+  vel = np.empty((num_joints, 7))
+  acc = np.empty((num_joints, 7))
 
   # Set first and last waypoint values to 0.0
   vel[:,0] = acc[:,0] = 0.0
@@ -30,21 +30,32 @@ def vision(group,base):
   fbk = group_feedback
   group_feedback = group.get_next_feedback(reuse_fbk=group_feedback)
 
+  # Set command timeout:
+  group.command_lifetime = 0.00
+
   st = 0.69
 
   if (base==0.0):
     pos[:,0] = group_feedback.position
     pos[:,1] = [base, -3.29, 2.83, 4.09, 0.0] #Home2
     pos[:,2] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,3] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,4] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,5] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,6] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
     home3 = [base, -4.7, 2.2, 4.15, 0.0]
   else:
     pos[:,0] = group_feedback.position
     pos[:,1] = [-0.03, -3.29, 2.83, 4.09, 0.0] #Home2
     pos[:,2] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,3] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,4] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,5] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
+    pos[:,6] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
     home3 = [base, -4.7, 2.2, 4.15, 0.0]
 
   # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 15, 3)
+  time = np.linspace(0, 22, 7)
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)

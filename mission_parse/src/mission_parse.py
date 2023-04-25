@@ -70,7 +70,8 @@ def callback(data):
 
 if __name__ == '__main__':
     # filename = input('Enter File name : ')
-    filename = 'hard.txt'
+    # 0filename = 'hard.txt'
+    filename = 'test.txt'
     parsed_command, time = parse_mission(filename)
     encoded_plan = encode(parsed_command)
     loc = 0
