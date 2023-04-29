@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 def home(group,base):
   import hebi
   import numpy as np

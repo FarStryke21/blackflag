@@ -4,19 +4,21 @@ import rospy
 import cv2
 from sensor_msgs.msg import Image
 from std_msgs.msg import String, Int32
-from cv_bridge import CvBridge
+# from cv_bridge import CvBridge
+from PIL import Image as PILImage
 import os
-import torch
 import numpy as np
 from roboflow import Roboflow
 import roboflow
 import panel_classifier
+# import yolo_classifier
 
-def callback(image_msg):
+def callback(msg):
     # Convert ROS image
-    bridge = CvBridge()
-    image = bridge.imgmsg_to_cv2(image_msg, desired_encoding = 'passthrough')
-    cv_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+    # bridge = CvBridge()
+    # image = bridge.imgmsg_to_cv2(image_msg)#, desired_encoding = 'passthrough')
+    pil_image = PILImage.frombytes("RGB",(msg.width, msg.height), msg.data)
+    cv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
     prediction(cv_image)
     # cv2.imshow('Image', cv_image)
     # cv2.waitKey(1)
@@ -46,6 +48,9 @@ def processing(frame, outputs):
 def prediction(image):
     # frame = np.asanyarray(image)
     outputs = clf.predict(image, confidence = 30, overlap = 80)
+    # process = subprocess.Popen(['python3', '/home/mechatronics/catkin_ws/src/blackflag/realsense_stream/src/yolo_classifier.py', image], capture_output = True)
+    # outputs = process.stdout.decode().strip()
+    # outputs = yolo_classifier.predict(image)
     annotated_frame, label, x, cropped_frames = processing(image, outputs.json()['predictions'])
     # height, width = annotated_frame.shape[:2]
     try:
@@ -77,9 +82,12 @@ if __name__ == '__main__':
     # model_name = 'yolov8_v2.pth'
     # model_path = os.path.join(model_dir, model_name)
     # clf = torch.load(model_path)
+    
     rf = Roboflow(api_key="uKIsEXbOt27HBKcS5KAo")
     project = rf.workspace().project("mechatronics2")
     clf = project.version(1).model
+    print("Model Loaded")
+    rospy.loginfo("Model loaded, beginning inference ...")
 
     rospy.init_node('image_predict', anonymous=True)
     rospy.Subscriber('/camera/color/image_raw', Image, callback)

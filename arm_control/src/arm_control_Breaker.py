@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 def breaker(group, mission_info, base=0.0):
   import hebi

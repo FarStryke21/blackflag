@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import rospy
 from std_msgs.msg import String, Bool
@@ -13,7 +13,7 @@ def code_publish(plan):
 
 def parse_mission(filename):
     # Store mission files in the directory below
-    filedirectory = '/home/aman/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
+    filedirectory = '/home/mechatronics/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
     
     filepath = os.path.join(filedirectory,filename)
     mission = open(filepath, 'r+')
@@ -63,7 +63,7 @@ def callback(data):
     message = str(task[1])+":"+str(task[2])
     if loc < len(parsed_command)-1:
         loc = loc+1
-        rospy.loginfo(f'Publishing data for {loc}th element in mission file')
+        rospy.loginfo('Publishing data for {}th element in mission file'.format(loc))
         data_pub.publish(message)
     else:
         rospy.loginfo('End of File reached!')
@@ -71,8 +71,9 @@ def callback(data):
 if __name__ == '__main__':
     # filename = input('Enter File name : ')
     # 0filename = 'hard.txt'
-    filename = 'test.txt'
+    filename = 'hard.txt'
     parsed_command, time = parse_mission(filename)
+    # rospy.loginfo('Start!')
     encoded_plan = encode(parsed_command)
     loc = 0
     try:
@@ -82,7 +83,7 @@ if __name__ == '__main__':
         rospy.init_node('mission_parse', anonymous=True)
 
         callback(True)
-        rate = rospy.Rate(10)
+        rate = rospy.Rate(30)
         code_publish(encoded_plan)
 
     except rospy.ROSInterruptException:
