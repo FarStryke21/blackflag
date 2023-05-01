@@ -89,8 +89,8 @@ class SimplePID{
 const int enca[] = {19,20,3,2};
 const int encb[] = {18,21,52,7};
 const int pwm[] = {8,44,46,4};
-const int in1[] = {9,40,48,5};
-const int in2[] = {10,42,50,6};
+const int in2[] = {9,40,48,5};
+const int in1[] = {10,42,50,6};
 
 int instructions[]={0,0,0,0,0,0,0,0};
 
@@ -238,18 +238,18 @@ void loop()
   nh.spinOnce();
 }
 
-void waitormove(int i,int pos[]){
-  if(instructions[i]==1)
+void waitormove(int k,int pos[]){
+  if(instructions[k]==1)
         {
           stuck=1;
           
-          if(i<4){
+          if(k<4){
             setTarget(1550,-1550,1550,-1550, pos);
           }
-          else if(i==4){
+          else if(k==4){
             setTarget(0,0,0,0, pos);
           } 
-          else if(i>4 && i<7){
+          else if(k>4 && k<7){
             setTarget(-1550,-1550,-1550,-1550, pos);
           }
           reach=1;
@@ -266,11 +266,11 @@ void waitormove(int i,int pos[]){
           digitalWrite(in2[2],LOW);
           digitalWrite(in1[3],LOW);
           digitalWrite(in2[3],LOW);
-          delay(500);         
-          if(i<4){
+          delay(1000);         
+          if(k<4){
             setTarget(1550,-1550,1550,-1550,pos);
           }
-          else if(i==4){
+          else if(k==4){
             setTarget(0,0,0,0,pos);
           } 
           else{

@@ -13,9 +13,9 @@ def home(group,base):
   # Each column is a separate waypoint.
   # Each row is a different joint.
   num_joints=5
-  pos = np.empty((num_joints, 4))
-  vel = np.empty((num_joints, 4))
-  acc = np.empty((num_joints, 4))
+  pos = np.empty((num_joints, 3))
+  vel = np.empty((num_joints, 3))
+  acc = np.empty((num_joints, 3))
 
   # Set first and last waypoint values to 0.0
   vel[:,0] = acc[:,0] = 0.0
@@ -35,19 +35,21 @@ def home(group,base):
 
   if (base==0.0):
     pos[:,0] = group_feedback.position
+    # pos[:,1] = [base, -4.7, 2.2, 4.15, 0.0] #home3
+    # pos[:,2] = [base, -4.5, 2.1, 4.15, 0.0] #Home3
+    # pos[:,3] = [base, -4.3, 2.1, 4.15, 0.0] #Home3
+    # pos[:,4] = [base, -3.29, 2.83, 4.09, 0.0] #Home2
     pos[:,1] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
-    pos[:,2] = [base, -4.7, 2.5, 4.15, 0.0] #Home3
-    pos[:,3] = [base, -3.29, 2.83, 4.09, 0.0] #Home2
+    pos[:,2] = [base, -3.29, 2.83, 3.6, 0.0] #Home2
     
     home3 = [base, -4.7, 2.2, 4.15, 0.0]
   else:
     pos[:,0] = group_feedback.position
     pos[:,1] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
-    pos[:,2] = [base, -4.7, 2.5, 4.15, 0.0] #Home3
-    pos[:,3] = [base, -3.29, 2.83, 4.09, 0.0] #Home2
+    pos[:,2] = [0.0, -3.29, 2.83, 3.6, 0.0] #Home2
 
   # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 15, 4)
+  time = np.linspace(0, 15, 3)  
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)

@@ -11,12 +11,10 @@
     <!--Arduino node-->
     <include file="$(find base_locomotion)/launch/arduino_launch.launch" />
 
-    <!--mission parser initiate-->
-    <node pkg="mission_parse" type="mission_parse.py" name="mission_parse" respawn="true" />
-
     <!--Arm Communication-->
     <node pkg="arm_control" type="arm_master.py" name="arm_node" required = "true" />
 
-
-
+    <!--mission parser initiate-->
+    <node pkg="mission_parse" type="mission_parse.py" name="mission_parse" respawn="true" />
+    
 </launch>

@@ -71,7 +71,7 @@ def callback(data):
 if __name__ == '__main__':
     # filename = input('Enter File name : ')
     # 0filename = 'hard.txt'
-    filename = 'hard.txt'
+    filename = 'test.txt'
     parsed_command, time = parse_mission(filename)
     # rospy.loginfo('Start!')
     encoded_plan = encode(parsed_command)

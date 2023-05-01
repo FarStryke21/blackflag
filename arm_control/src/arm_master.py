@@ -11,16 +11,13 @@ import panel_classifier
 
 import arm_control_vision
 
-import math
 import hebi
 import numpy as np
 from time import sleep
 import rospy
 from std_msgs.msg import String, Bool, Int32
-from sensor_msgs.msg import Image
 import os
-from cv_bridge import CvBridge
-import cv2
+
 
 def current_panel(msg):
     global current_valve
@@ -74,14 +71,14 @@ if __name__ == '__main__':
     # Give the Lookup process 2 seconds to discover modules
     sleep(2)
     print('Modules found on network:')
-    for entry in lookup.entrylist:
-        print(f'{entry.family} | {entry.name}')
+    # for entry in lookup.entrylist:
+    #     print(f'{entry.family} | {entry.name}')
 
     group = lookup.get_group_from_family('Arm')
 
 
     # Send gains:
-    config_dir = '/home/aman/catkin_ws/src/blackflag/arm_control/config'
+    config_dir = '/home/mechatronics/catkin_ws/src/blackflag/arm_control/config'
     gain_file = os.path.join(config_dir, "correct_gains.xml")
     group_cmd = hebi.GroupCommand(group.size)
     group_cmd.read_gains(gain_file)
@@ -94,10 +91,11 @@ if __name__ == '__main__':
                      'vertical gate valve',
                      'horizontal gate valve',
                      'large valve']
+    # valid_results = ['stopcock', 'gate valve', 'breaker', 'large valve']
     ##-------------------------------------------------
     for ch in mission_code:
         if ch == '1':
-            rospy.loginfo(f'Starting loop {i+1}')
+            # rospy.loginfo(f'Starting loop {i+1}')
 
             if i < 5:
                 base = 0.0
@@ -109,53 +107,47 @@ if __name__ == '__main__':
             num_joints = 5
             trajectory = 0
             classification = ''
+            task = mission_info
 
             while True:
-                if (current_valve in valid_results):
+                # if (mission_panel.lower() in current_valve and mission_panel.lower() in valid_results):
+                    # classification = mission_panel
+                    # task = mission_info
+                if current_valve in valid_results:
                     classification = current_valve
                     break
 
             if(classification == 'large valve'):
-                arm_control_LV.LV(group, base, mission_info)
+                arm_control_LV.LV(group, base, int(task))
     
-            elif('horizontal stopcock:close' == classification):
+            # elif('horizontal stopcock' in current_valve and 'stopcock' == classification  and task == '1'):
+            elif(classification =='horizontal stopcock:close'):
                 arm_control_HSC.HSC_c2o(group, base)
             
-            elif('horizontal stopcock:open' == classification):
+            # elif('horizontal stopcock' in current_valve and 'stopcock' == classification and task == '0'):
+            elif(classification=='horizontal stopcock:open'):
                 arm_control_HSC.HSC_o2c(group, base)
             
-            elif('vertical stopcock:close' == classification):
+            # elif('vertical stopcock' in current_valve and 'stopcock' == classification and task == '1'):
+            elif(classification=='vertical stopcock:close'):
                 arm_control_VSC.VSC_c2o(group, base)
             
-            elif('vertical stopcock:open' == classification):
+            # elif('vertical stopcock' in current_valve and 'stopcock' == classification and task == '0'):
+            elif(classification=='vertical stopcock:open'):
                 arm_control_VSC.VSC_o2c(group, base)
                 
+            # elif('vertical gate valve' in current_valve and classification=='gate valve'):
             elif(classification=='vertical gate valve'):
-                arm_control_VGV.VGV(group, base, mission_info)
+                arm_control_VGV.VGV(group, base, int(task))
                 
+            # elif('horizontal gate valve' in current_valve and classification=='gate valve'):
             elif(classification=='horizontal gate valve'):
-                arm_control_HGV.HGV(group, base, mission_info)
+                arm_control_HGV.HGV(group, base, int(task))
 
             elif(classification=='breaker'):
                 arm_control_Breaker.breaker(group, base, mission_info)
-
-            # cmd = hebi.GroupCommand(num_joints)
-            # period = 0.01
-            # duration = trajectory.duration
-
-            # pos_cmd = np.array(num_joints, dtype=np.float64)
-            # vel_cmd = np.array(num_joints, dtype=np.float64)
-
-            # t = 0.0
-
-            # while (t < duration):
-            #     pos_cmd, vel_cmd, acc_cmd = trajectory.get_state(t)
-            #     cmd.position = pos_cmd
-            #     cmd.velocity = vel_cmd
-            #     group.send_command(cmd)
-
-            #     t = t + period
-            #     sleep(period)
+            else:
+                arm_control_home.home(group, base)
 
             try:
                 msg = Bool()

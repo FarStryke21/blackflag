@@ -14,14 +14,9 @@ import panel_classifier
 # import yolo_classifier
 
 def callback(msg):
-    # Convert ROS image
-    # bridge = CvBridge()
-    # image = bridge.imgmsg_to_cv2(image_msg)#, desired_encoding = 'passthrough')
     pil_image = PILImage.frombytes("RGB",(msg.width, msg.height), msg.data)
     cv_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
     prediction(cv_image)
-    # cv2.imshow('Image', cv_image)
-    # cv2.waitKey(1)
 
 def processing(frame, outputs):
     return_frame = frame
@@ -46,43 +41,35 @@ def processing(frame, outputs):
     return return_frame, labels, xs, cropped_frame
 
 def prediction(image):
-    # frame = np.asanyarray(image)
-    outputs = clf.predict(image, confidence = 30, overlap = 80)
-    # process = subprocess.Popen(['python3', '/home/mechatronics/catkin_ws/src/blackflag/realsense_stream/src/yolo_classifier.py', image], capture_output = True)
-    # outputs = process.stdout.decode().strip()
-    # outputs = yolo_classifier.predict(image)
+    outputs = clf.predict(image, confidence = 40, overlap = 80)
     annotated_frame, label, x, cropped_frames = processing(image, outputs.json()['predictions'])
     # height, width = annotated_frame.shape[:2]
     try:
-        if label[0] == 'horizontal stopcock':
-            status = panel_classifier.hor_stpck(cropped_frames[0])
-            label[0] = label[0]+':'+status
-        elif label[0] == 'vertical stopcock':
-            status = panel_classifier.ver_stpck(cropped_frames[0])
-            label[0] = label[0]+':'+status
-        elif label[0] == 'breaker':
-            pass
-
+        for i in range(len(label)):
+            if label[i] == 'horizontal stopcock':
+                status = panel_classifier.hor_stpck(cropped_frames[0])
+                label[i] = label[0]+':'+status
+            elif label[i] == 'vertical stopcock':
+                status = panel_classifier.ver_stpck(cropped_frames[0])
+                label[i] = label[0]+':'+status
+            elif label[i] == 'breaker':
+                pass
+        # message = ";".join(label)
+        # pub_label.publish(message)
         pub_label.publish(label[0])
         # pub_align.publish(640 - int(x[0]))
-        # pub_cropped.publish(cropped_frames[0])
         # pub_align.publish(width)
-        # annotated_frame, labels = processing(image, outputs.json()['predictions'])
 
     except Exception as e:
         # rospy.loginfo(e)
         pass
+
     cv2.imshow('Realsense Stream', annotated_frame)
     cv2.waitKey(1)
 
 
     
 if __name__ == '__main__':
-    # model_dir = '/home/aman/catkin_ws/src/blackflag/realsense_stream/config'
-    # model_name = 'yolov8_v2.pth'
-    # model_path = os.path.join(model_dir, model_name)
-    # clf = torch.load(model_path)
-    
     rf = Roboflow(api_key="uKIsEXbOt27HBKcS5KAo")
     project = rf.workspace().project("mechatronics2")
     clf = project.version(1).model
