@@ -41,19 +41,19 @@ def processing(frame, outputs):
     return return_frame, labels, xs, cropped_frame
 
 def prediction(image):
-    outputs = clf.predict(image, confidence = 40, overlap = 80)
+    outputs = clf.predict(image, confidence = 30, overlap = 30)
     annotated_frame, label, x, cropped_frames = processing(image, outputs.json()['predictions'])
     # height, width = annotated_frame.shape[:2]
     try:
-        for i in range(len(label)):
-            if label[i] == 'horizontal stopcock':
-                status = panel_classifier.hor_stpck(cropped_frames[0])
-                label[i] = label[0]+':'+status
-            elif label[i] == 'vertical stopcock':
-                status = panel_classifier.ver_stpck(cropped_frames[0])
-                label[i] = label[0]+':'+status
-            elif label[i] == 'breaker':
-                pass
+        # for i in range(len(label)):
+        if label[0] == 'horizontal stopcock':
+            status = panel_classifier.hor_stpck(cropped_frames[0])
+            label[0] = label[0]+':'+status
+        elif label[0] == 'vertical stopcock':
+            status = panel_classifier.ver_stpck(cropped_frames[0])
+            label[0] = label[0]+':'+status
+        elif label[0] == 'breaker':
+            pass
         # message = ";".join(label)
         # pub_label.publish(message)
         pub_label.publish(label[0])

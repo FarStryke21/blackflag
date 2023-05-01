@@ -108,7 +108,7 @@ if __name__ == '__main__':
             trajectory = 0
             classification = ''
             task = mission_info
-
+            current_valve = ''
             while True:
                 # if (mission_panel.lower() in current_valve and mission_panel.lower() in valid_results):
                     # classification = mission_panel
