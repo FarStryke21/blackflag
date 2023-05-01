@@ -6,9 +6,11 @@ import os
 
 
 def code_publish(plan):
+    global message
     rospy.loginfo('Encoded Code Publishing started!')
     while not rospy.is_shutdown():
         code_pub.publish(plan)
+        data_pub.publish(message)
         rate.sleep()
 
 def parse_mission(filename):
@@ -59,31 +61,31 @@ def encode(plan):
 
 def callback(data):
     global loc
-    task = parsed_command[loc]
-    message = str(task[1])+":"+str(task[2])
-    if loc < len(parsed_command)-1:
+    global message
+    
+    if loc < len(parsed_command):
+        task = parsed_command[loc]
+        message = str(task[1])+":"+str(task[2])
         loc = loc+1
         rospy.loginfo('Publishing data for {}th element in mission file'.format(loc))
-        data_pub.publish(message)
     else:
-        rospy.loginfo('End of File reached!')
+        rospy.signal_shutdown('End of File reached!')
 
 if __name__ == '__main__':
-    # filename = input('Enter File name : ')
     # 0filename = 'hard.txt'
     filename = 'test.txt'
     parsed_command, time = parse_mission(filename)
     # rospy.loginfo('Start!')
     encoded_plan = encode(parsed_command)
     loc = 0
+    message = ''
     try:
         code_pub = rospy.Publisher('mission_code', String, queue_size=10)
         data_pub = rospy.Publisher('panel_info', String, queue_size=10)
         rospy.Subscriber("completion_status", Bool, callback)
         rospy.init_node('mission_parse', anonymous=True)
-
-        callback(True)
         rate = rospy.Rate(30)
+        callback(True)
         code_publish(encoded_plan)
 
     except rospy.ROSInterruptException:
