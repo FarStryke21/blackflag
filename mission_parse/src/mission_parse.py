@@ -59,9 +59,10 @@ def encode(plan):
 
 def callback(data):
     global loc
-    task = parsed_command[loc]
-    message = str(task[1])+":"+str(task[2])
-    if loc < len(parsed_command)-1:
+    global parsed_command  
+    if loc < len(parsed_command):
+        task = parsed_command[loc]
+        message = str(task[1])+":"+str(task[2])
         loc = loc+1
         rospy.loginfo(f'Publishing data for {loc}th element in mission file')
         data_pub.publish(message)

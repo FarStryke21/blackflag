@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 
-def HGV(group,base, mission_info):
+def HGV(group,base,mission_info):
 
   import hebi
   import numpy as np
@@ -42,19 +42,20 @@ def HGV(group,base, mission_info):
   pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
   pos[:,2] = [base, -4.34, 2.35, 4.09, 0.0]
   pos[:,3] = [base+0.1, -3.82, 2.35, 4.09, 0.0]
-  pos[:,4] = [base+0.15, -3.82, 2.07, 1.74, 0.0]
-  pos[:,5] = [base+0.15, -3.75, 2.07, 1.74, 0.0]
-  pos[:,6] = [base+0.15, -3.75, 2.07, 1.74, 0.0]
-  pos[:,7] = [base+0.15, -3.94, 2.07, 1.36, 0.0]
-  pos[:,8] = [base+0.15, -4, 2.07, 1.4, 0.0]
+  pos[:,4] = [base+0.12, -3.82, 2.17, 1.74, 0.0]
+  pos[:,5] = [base+0.12, -3.95, 2.17, 1.74, 0.0]
+  pos[:,6] = [base+0.12, -3.95, 2.17, 1.74, 0.0]
+  pos[:,7] = [base+0.12, -3.95, 1.95, 1.36, 0.0]
+  pos[:,8] = [base+0.12, -4.2, 1.95, 1.4, 0.0]
   # Actuation
-  pos[:,9] = [base+0.15, -4, 2.07, 1.4, -2.9]
-  pos[:,10] = [base+0.15, -3.75, 2.07, 1.4, -2.9]
+  pos[:,9] = [base+0.15, -4.2, 1.95, 1.4, 1.8]
+  pos[:,9] = [base+0.15, -4.2, 1.95, 1.4, 2.9]
+  pos[:,10] = [base+0.15, -3.75, 1.95, 1.4, 2.9]
   pos[:,11] = [-0.03, -3.29, 2.83, 4.09, 0.0] #Home2
 
   #pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
 # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 40, 11)
+  time = np.linspace(0, 60, 12)
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)

@@ -136,25 +136,8 @@ if __name__ == '__main__':
                 arm_control_HGV.HGV(group, base, mission_info)
 
             elif(classification=='breaker'):
-                arm_control_Breaker.breaker(group, base, mission_info)
-
-            # cmd = hebi.GroupCommand(num_joints)
-            # period = 0.01
-            # duration = trajectory.duration
-
-            # pos_cmd = np.array(num_joints, dtype=np.float64)
-            # vel_cmd = np.array(num_joints, dtype=np.float64)
-
-            # t = 0.0
-
-            # while (t < duration):
-            #     pos_cmd, vel_cmd, acc_cmd = trajectory.get_state(t)
-            #     cmd.position = pos_cmd
-            #     cmd.velocity = vel_cmd
-            #     group.send_command(cmd)
-
-            #     t = t + period
-            #     sleep(period)
+                # arm_control_Breaker.breaker(group, base, mission_info)
+                arm_control_home.home(group, base)
 
             try:
                 msg = Bool()

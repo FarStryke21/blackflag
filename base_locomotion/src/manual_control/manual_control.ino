@@ -36,31 +36,54 @@ int Count_pulses = 0;
 
 // Motor FR connections - Motor Driver 1
 int enFR = 44;
-int inFR_1 = 40;
-int inFR_2 = 42;
+int inFR_2 = 40;
+int inFR_1 = 42;
 
 
 // Motor FL connections - Motor Driver 1
 int enFL = 8;
-int inFL_1 = 9;
-int inFL_2 = 10;
+int inFL_2 = 9;
+int inFL_1 = 10;
 
 // Motor RR connections - Motor Driver 2
 int enRR = 46;
-int inRR_1 = 48;
-int inRR_2 = 50;
+int inRR_2 = 48;
+int inRR_1 = 50;
 
 
 // Motor RL connections - Motor Driver 2
 int enRL = 4;
-int inRL_1 = 5;
-int inRL_2 = 6;
+int inRL_2 = 5;
+int inRL_1 = 6;
+
+
+//// Motor FR connections - Motor Driver 1
+//int enFR = 44;
+//int inFR_1 = 40;
+//int inFR_2 = 42;
+//
+//
+//// Motor FL connections - Motor Driver 1
+//int enFL = 8;
+//int inFL_1 = 9;
+//int inFL_2 = 10;
+//
+//// Motor RR connections - Motor Driver 2
+//int enRR = 46;
+//int inRR_1 = 48;
+//int inRR_2 = 50;
+//
+//
+//// Motor RL connections - Motor Driver 2
+//int enRL = 4;
+//int inRL_1 = 5;
+//int inRL_2 = 6;
 
 float x = 0.0;
 float z = 0.0;
 
 
-int speed = 150;
+int speed = 100;
 
 
 void cmdVelCallback(const std_msgs::Float32& cmd_input) {

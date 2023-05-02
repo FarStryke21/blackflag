@@ -17,6 +17,13 @@ def breaker(group, mission_info, base=0.0):
   # Set all other values to NaN
   vel[:,1:-1] = acc[:,1:-1] = np.nan
 
+  lookup = hebi.Lookup()
+    # Give the Lookup process 2 seconds to discover modules
+
+  group = lookup.get_group_from_family('Arm')
+
+  group_feedback = hebi.GroupFeedback(group.size)
+  group.feedback_frequency = 200.0
   # Set positions
   fbk = group_feedback
   group_feedback = group.get_next_feedback(reuse_fbk=group_feedback)
