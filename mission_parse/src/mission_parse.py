@@ -27,7 +27,7 @@ def parse_mission(filename):
     time = int(segments[-1])
     segments = segments[0:-1]
 
-    feature_map = {'V1':'Gate Valve', 'V2':'Large Valve', 'V3':'Stopcock Valve', 'A':'Breaker Box', 'B':'Breaker Box'}
+    feature_map = {'V1':'Gate Valve', 'V2':'Large Valve', 'V3':'Stopcock', 'A':'Breaker', 'B':'Breaker'}
 
     parsed_command = []
 

@@ -1,11 +1,13 @@
 <launch>
 
     <!--Predict Image-->
-    <node pkg="realsense_stream" type="predict_image.py" name="image_predict" respawn="true" />
+    <node pkg="realsense_stream" type="predict_image.py" name="image_predict" required = "true" />
     
     <!--Launch the camera node-->
     <include file = "$(find realsense2_camera)/launch/rs_camera.launch">
-        <arg name = "initial_reset" value = "true" />
+       <arg name = "enable_depth" value = "false" />
+       <arg name = "enable_accel" value = "false" />
+       <arg name = "enable_gyro" value = "false" />
     </include>
     
     <!--Arduino node-->

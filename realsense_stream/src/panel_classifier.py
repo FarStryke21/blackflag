@@ -113,11 +113,6 @@ def hor_stpck(img):
         # # Get the parameters of the ellipse
         center, axes, angle = ellipse
 
-        # # Draw the major axis of the ellipse on the original image
-        # major_axis = (int(center[0]), int(center[1])), (int(axes[0]/2), 0), angle
-        # minor_axis = (int(center[0]), int(center[1])), (0, int(axes[1]/2)), angle
-        # cv2.ellipse(img, minor_axis, (0, 0, 255), 5)
-
         angle = abs(angle-90)
         status = '?'
         if major_axis_length < 90:
