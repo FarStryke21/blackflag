@@ -111,45 +111,46 @@ if __name__ == '__main__':
             num_joints = 5
             trajectory = 0
             classification = ''
-            task = mission_info
             current_valve = ''
+            looking = ''
             mission_panel = mission_panel.lower()
             while True:
                 if (mission_panel.lower() in current_valve and mission_panel.lower() in valid_results):
                     classification = mission_panel
                     task = mission_info
+                    looking = current_valve
                 # if current_valve in valid_results:
                 #     classification = current_valve
                     break
 
-            if(classification == 'large valve'):
+            if(classification == 'large valve' and 'large vvalve' in looking):
                 arm_control_LV.LV(group, base, int(task))
     
-            elif('horizontal stopcock' in current_valve and 'stopcock' == classification  and task == '1'):
+            elif('horizontal stopcock:close' in looking and 'stopcock' == classification  and task == '1'):
             # elif(classification =='horizontal stopcock:close'):
                 arm_control_HSC.HSC_c2o(group, base)
             
-            elif('horizontal stopcock' in current_valve and 'stopcock' == classification and task == '0'):
+            elif('horizontal stopcock:open' in looking and 'stopcock' == classification and task == '0'):
             # elif(classification=='horizontal stopcock:open'):
                 arm_control_HSC.HSC_o2c(group, base)
             
-            elif('vertical stopcock' in current_valve and 'stopcock' == classification and task == '1'):
+            elif('vertical stopcock:close' in looking and 'stopcock' == classification and task == '1'):
             # elif(classification=='vertical stopcock:close'):
                 arm_control_VSC.VSC_c2o(group, base)
             
-            elif('vertical stopcock' in current_valve and 'stopcock' == classification and task == '0'):
+            elif('vertical stopcock:open' in looking and 'stopcock' == classification and task == '0'):
             # elif(classification=='vertical stopcock:open'):
                 arm_control_VSC.VSC_o2c(group, base)
                 
-            elif('vertical gate valve' in current_valve and classification=='gate valve'):
+            elif('vertical gate valve' in looking and classification=='gate valve'):
             # elif(classification=='vertical gate valve'):
                 arm_control_VGV.VGV(group, base, int(task))
                 
-            elif('horizontal gate valve' in current_valve and classification=='gate valve'):
+            elif('horizontal gate valve' in looking and classification=='gate valve'):
             # elif(classification=='horizontal gate valve'):
                 arm_control_HGV.HGV(group, base, int(task))
 
-            elif(classification=='breaker'):
+            elif(classification=='breaker' and 'breaker' in looking):
                 arm_control_Breaker.breaker(group, base, mission_info)
             
             else:
