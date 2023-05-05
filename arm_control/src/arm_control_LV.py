@@ -1,5 +1,4 @@
-#!/usr/bin/env python
-
+#!/usr/bin/env python3
 import arm_control_home
 
 def LV(group,base,mission_info):
@@ -13,7 +12,7 @@ def LV(group,base,mission_info):
   # Populate variable 'current_position' with position feedback
 
   lookup = hebi.Lookup()
-  # Give the Lookup process 2 seconds to discover modules
+    # Give the Lookup process 2 seconds to discover modules
 
   group = lookup.get_group_from_family('Arm')
 

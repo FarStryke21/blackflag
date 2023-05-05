@@ -17,6 +17,7 @@ from time import sleep
 import rospy
 from std_msgs.msg import String, Bool, Int32
 import os
+import time
 
 
 def current_panel(msg):
@@ -40,9 +41,9 @@ def mission_code_callback(msg):
         mission_code = msg.data
         flag = False
 
-def counter_callback(msg):
-    global i
-    i = int(msg.data)
+# def counter_callback(msg):
+#     global i
+#     i = int(msg.data)
 
 def reached_callback(msg):
     global reached
@@ -57,14 +58,14 @@ if __name__ == '__main__':
     cropped_img = 0
     reached = 1 # Intially at correct position
     flag = True
-    i = -1
+    i = 0
     rospy.init_node('arm_node', anonymous=True)
     rate = rospy.Rate(30)
     rospy.Subscriber('/realsense_predict', String, current_panel)
     rospy.Subscriber('/panel_info', String, panel_info_callback)
     rospy.Subscriber('/mission_code', String, mission_code_callback)
     rospy.Subscriber('/reached_status', Int32, reached_callback)
-    rospy.Subscriber('/counter_status', Int32, counter_callback)
+    # rospy.Subscriber('/counter_status', Int32, counter_callback)
     completition_status_publisher = rospy.Publisher('/completion_status', Bool, queue_size = 10)
     current_valve_publisher = rospy.Publisher('/current_valve', String, queue_size = 10)
 
@@ -94,17 +95,19 @@ if __name__ == '__main__':
     valid_results = ['stopcock', 'gate valve', 'breaker', 'large valve']
     ##-------------------------------------------------
     for ch in mission_code:
+        i = i+1
         if ch == '1':
-            while True:
+            t_end = time.time() + 8
+            while time.time() < t_end:
                 if (reached == 1):
-                    reached = -1
                     break
             # rospy.loginfo(f'Starting loop {i+1}')
 
-            if i < 5:
+            reached = -1
+            if i <= 5:
                 base = 0.0
             else:
-                base = -1.57
+                base = -1.27
 
             arm_control_vision.vision(group, base)
 
@@ -118,16 +121,20 @@ if __name__ == '__main__':
             looking = ''
 
             while True:
-                if (mission_panel in current_valve and mission_panel in valid_results):
-                    classification = mission_panel
-                    task = mission_info
-                    looking = current_valve
-                # if current_valve in valid_results:
-                #     classification = current_valve
-                    break
+                if ((mission_panel in current_valve and mission_panel in valid_results) or i == 3):
+                    if i == 3:
+                        classification = mission_panel
+                        task = mission_info
+                        looking = 'large valve_gate valve'
+                        looking = looking.split('_')
+                        break
+                    else:
+                        classification = mission_panel
+                        task = mission_info
+                        looking = current_valve
+                        looking = looking.split('_')
+                        break
                 
-            looking = looking.split('_')
-
             if((classification == 'large valve') and ('large valve' in looking)):
                 arm_control_LV.LV(group, base, int(task))
     
@@ -156,8 +163,8 @@ if __name__ == '__main__':
                 arm_control_HGV.HGV(group, base, int(task))
 
             elif((classification=='breaker') and ('breaker' in looking)):
-                # arm_control_Breaker.breaker(group, base, mission_info)
-                arm_control_home.home(group, base)
+                arm_control_Breaker.breaker(group, base)
+                # arm_control_home.home(group, base)
 
             else:
                 arm_control_home.home(group, base)

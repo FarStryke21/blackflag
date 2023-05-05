@@ -73,7 +73,7 @@ def callback(data):
         rospy.signal_shutdown('End of File reached!')
 
 if __name__ == '__main__':
-    # 0filename = 'hard.txt'
+    # filename = 'repeat.txt'
     filename = 'test.txt'
     parsed_command, time = parse_mission(filename)
     # rospy.loginfo('Start!')

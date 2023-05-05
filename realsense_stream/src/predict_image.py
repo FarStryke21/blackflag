@@ -44,23 +44,29 @@ def prediction(image):
     outputs = clf.predict(image, confidence = 30, overlap = 30)
     annotated_frame, label, x, cropped_frames = processing(image, outputs.json()['predictions'])
     # height, width = annotated_frame.shape[:2]
-    label.remove('pipe')
+    
     try:
-        message = label
-        if len(label) > 1:
-            for i in range(len(label)):
-                if label[i] == 'horizontal stopcock':
-                    status = panel_classifier.hor_stpck(cropped_frames[0])
-                    label[i] = label[i]+':'+status
-                elif label[i] == 'vertical stopcock':
-                    status = panel_classifier.ver_stpck(cropped_frames[0])
-                    label[i] = label[i]+':'+status
-                elif label[i] == 'breaker':
-                    pass
-            message = "_".join(label)
+        try:
+            label.remove('pipe')
+        except Exception as e:
+            pass
 
-        pub_label.publish(message)
-        # pub_label.publish(label[0])
+        # message = label
+        # if len(label) > 1:
+            # for i in range(len(label)):
+        if label[0] == 'horizontal stopcock':
+            status = panel_classifier.hor_stpck(cropped_frames[0])
+            label[0] = label[0]+':'+status
+        elif label[0] == 'vertical stopcock':
+            status = panel_classifier.ver_stpck(cropped_frames[0])
+            label[0] = label[0]+':'+status
+        elif label[0] == 'breaker':
+            pass
+        
+        label = "_".join(label)
+
+        # pub_label.publish(message)
+        pub_label.publish(label)
         # pub_align.publish(640 - int(x[0]))
         # pub_align.publish(width)
 
