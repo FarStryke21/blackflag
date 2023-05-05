@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 def home(group,base):
   import hebi
   import numpy as np
@@ -35,10 +33,6 @@ def home(group,base):
 
   if (base==0.0):
     pos[:,0] = group_feedback.position
-    # pos[:,1] = [base, -4.7, 2.2, 4.15, 0.0] #home3
-    # pos[:,2] = [base, -4.5, 2.1, 4.15, 0.0] #Home3
-    # pos[:,3] = [base, -4.3, 2.1, 4.15, 0.0] #Home3
-    # pos[:,4] = [base, -3.29, 2.83, 4.09, 0.0] #Home2
     pos[:,1] = [base, -4.7, 2.2, 4.15, 0.0] #Home3
     pos[:,2] = [base, -3.29, 2.83, 3.6, 0.0] #Home2
     
@@ -49,7 +43,7 @@ def home(group,base):
     pos[:,2] = [0.0, -3.29, 2.83, 3.6, 0.0] #Home2
 
   # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 15, 3)  
+  time = np.linspace(0, 15, 3)
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)
@@ -70,11 +64,5 @@ def home(group,base):
     group.send_command(cmd)
     t = t + period
     sleep(period)
-
-  #if (hold==True):
-  #  for i in range(1,5000):
-  #    print(i)
-  #    cmd.position = home3
-  #    group.send_command(cmd)
 
 

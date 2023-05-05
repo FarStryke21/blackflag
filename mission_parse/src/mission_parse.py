@@ -15,8 +15,8 @@ def code_publish(plan):
 
 def parse_mission(filename):
     # Store mission files in the directory below
-    filedirectory = '/home/mechatronics/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
-    # filedirectory = '/home/aman/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
+    #filedirectory = '/home/mechatronics/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
+    filedirectory = '/home/aman/catkin_ws/src/blackflag/mission_parse/samples/mission_files'
     
     filepath = os.path.join(filedirectory,filename)
     mission = open(filepath, 'r+')
@@ -73,8 +73,8 @@ def callback(data):
         rospy.signal_shutdown('End of File reached!')
 
 if __name__ == '__main__':
-    # 0filename = 'hard.txt'
-    filename = 'test.txt'
+    # filename = 'repeat.txt'
+    filename = 'hard.txt'
     parsed_command, time = parse_mission(filename)
     # rospy.loginfo('Start!')
     encoded_plan = encode(parsed_command)

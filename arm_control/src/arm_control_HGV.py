@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 
 def HGV(group,base,mission_info):
@@ -19,9 +19,9 @@ def HGV(group,base,mission_info):
   # Each column is a separate waypoint.
   # Each row is a different joint.
   num_joints=5
-  pos = np.empty((num_joints, 12))
-  vel = np.empty((num_joints, 12))
-  acc = np.empty((num_joints, 12))
+  pos = np.empty((num_joints, 13))
+  vel = np.empty((num_joints, 13))
+  acc = np.empty((num_joints, 13))
 
   # Set first and last waypoint values to 0.0
   vel[:,0] = acc[:,0] = 0.0
@@ -41,21 +41,21 @@ def HGV(group,base,mission_info):
   pos[:,0] = group_feedback.position
   pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
   pos[:,2] = [base, -4.34, 2.35, 4.09, 0.0]
-  pos[:,3] = [base+0.1, -3.82, 2.35, 4.09, 0.0]
-  pos[:,4] = [base+0.12, -3.82, 2.17, 1.74, 0.0]
-  pos[:,5] = [base+0.12, -3.95, 2.17, 1.74, 0.0]
-  pos[:,6] = [base+0.12, -3.95, 2.17, 1.74, 0.0]
-  pos[:,7] = [base+0.12, -3.95, 1.95, 1.36, 0.0]
-  pos[:,8] = [base+0.12, -4.2, 1.95, 1.4, 0.0]
+  pos[:,3] = [base-0.1, -3.82, 2.35, 4.09, 0.0]
+  pos[:,4] = [base-0.1, -3.82, 2.17, 1.74, 0.0]
+  pos[:,5] = [base-0.1, -3.95, 2.17, 1.74, 0.0]
+  pos[:,6] = [base-0.1, -3.95, 2.17, 1.74, 0.0]
+  pos[:,7] = [base-0.1, -3.95, 1.95, 1.36, 0.0]
+  pos[:,8] = [base-0.1, -4.2, 1.95, 1.4, 0.0]
   # Actuation
-  pos[:,9] = [base+0.15, -4.2, 1.95, 1.4, 1.8]
-  pos[:,9] = [base+0.15, -4.2, 1.95, 1.4, 2.9]
-  pos[:,10] = [base+0.15, -3.75, 1.95, 1.4, 2.9]
-  pos[:,11] = [-0.03, -3.29, 2.83, 4.09, 0.0] #Home2
+  pos[:,9] = [base-0.15, -4.2, 1.95, 1.4, 1.8]
+  pos[:,10] = [base-0.15, -4.2, 1.95, 1.4, 2.9]
+  pos[:,11] = [base-0.15, -3.75, 1.95, 1.4, 2.9]
+  pos[:,12] = [0.0, -3.29, 2.83, 4.09, 0.0] #Home2
 
   #pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
 # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 60, 12)
+  time = np.linspace(0, 60, 13)
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)

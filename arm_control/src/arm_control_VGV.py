@@ -19,9 +19,9 @@ def VGV(group,base, mission_info):
   # Each column is a separate waypoint.
   # Each row is a different joint.
   num_joints=5
-  pos = np.empty((num_joints, 15))
-  vel = np.empty((num_joints, 15))
-  acc = np.empty((num_joints, 15))
+  pos = np.empty((num_joints, 19))
+  vel = np.empty((num_joints, 19))
+  acc = np.empty((num_joints, 19))
 
   # Set first and last waypoint values to 0.0
   vel[:,0] = acc[:,0] = 0.0
@@ -38,28 +38,27 @@ def VGV(group,base, mission_info):
   # Set command timeout:
   group.command_lifetime = 200.00
   pos[:,0] = group_feedback.position
-  #pos[:,1] = [base, -4.61, 2.06, 4.09, 0.0]
-  pos[:,1] = [base, -3.32, 2.50, -2.38, 0.00]
-  pos[:,2] = [base, -3.75, 2.10, -2.38, 0.00]
-  pos[:,3] = [base, -4.26, 1.38, -2.57, 2.44]
-  pos[:,4] = [base, -4.26, 1.38, -1.5, 3.99]
-  pos[:,5] = [base, -4.26, 1.38, -0.28, 3.99]
-  # Actuation
-  pos[:,6] = [base, -4.26, 1.63, -0.28, 3.99]
-  pos[:,7] = [base, -4.26, 1.63, -0.28, 3.5]
-  pos[:,8] = [base, -4.26, 1.63, -0.28, 3.0]
-  pos[:,9] = [base, -4.26, 1.47, -0.28, 2.44]
-  pos[:,10] = [base, -4.26, 1.38, -0.28, 2.44]
-  pos[:,11] = [base, -4.26, 1.38, -1.5, 2.44]
-  pos[:,12] = [base, -4.26, 1.38, -2.57, 2.44]
-  pos[:,13] = [base, -3.75, 2.10, -2.38, 0.00]
-  pos[:,14] = [base, -3.32, 2.50, -2.38, 0.00]
-  
-  
-
+  pos[:,1] = [base, -4.7, 2.2, 4.15, 0.0]
+  pos[:,2] = [base, -4.47, 2.3, 4.4, 0.0]
+  pos[:,3] = [base, -3.98, 2.3, 4.4, 0.0]
+  pos[:,4] = [base, -3.98, 1.73, 4.4, 0.0]
+  pos[:,5] = [base, -4.17, 1.58, 4.4, 0.0]
+  pos[:,6] = [base, -4.17, 1.58, 6.22, 0.0]
+  pos[:,7] = [base+0.14, -4.17, 1.58, 6.22, 0.0]
+  pos[:,8] = [base+0.14, -4.17, 1.49, 6.22, 0.0]
+  pos[:,9] = [base+0.14, -4.37, 1.49, 6.22, 0.0]
+  pos[:,10] = [base+0.14, -4.39, 1.49, 6.22, -1.75]
+  pos[:,11] = [base+0.14, -4.39, 1.49, 6.22, -1.75]
+  pos[:,12] = [base+0.14, -4.17, 1.49, 6.22, -1.75]
+  pos[:,13] = [base+0.14, -4.17, 1.58, 6.22, -1.75]
+  pos[:,14] = [base, -4.17, 1.58, 6.22, -1.75]
+  pos[:,15] = [base, -4.17, 1.58, 4.4, -1.75]
+  pos[:,16] = [base, -3.98, 1.73, 4.4, 0.0]
+  pos[:,17] = [base, -3.98, 2.3, 4.4, 0.0]
+  pos[:,18] = [0.0, -3.29, 2.83, 4.09, 0.0]
 
   # The times to reach each waypoint (in seconds)
-  time = np.linspace(0, 75, 15)
+  time = np.linspace(0, 60, 19)
 
   # Define trajectory
   trajectory = hebi.trajectory.create_trajectory(time, pos, vel, acc)
